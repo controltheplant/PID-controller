@@ -1,0 +1,24 @@
+TYPE typePIDSettings :
+STRUCT
+	iwAntiWindupMethod       : enumAntiWindupMethods;       // method selected to prevent integrator saturation
+	iwBumplessTransferMethod : enumBumplessTransferMethods; // method selected for transfer from Manual to Auto
+
+	irKP  : REAL := 1.0;                  // proportional term. Negative value is forbidden
+	irTI  : REAL := 0.0;                  // integral term. Negative value is forbidden
+	irTD  : REAL := 0.0;                  // derivative term. Negative value is forbidden
+	irTdF : REAL := 0.5;                  // Filter time for derivative component
+    ixInverted           : BOOL := FALSE; // inverted controller action
+	irDeadband           : REAL := 0.0;   // deadband for error signal, [%]
+	
+	itSetpointFilterTime : REAL := 0.0;   // time const for setpoint filter, [sec]
+	irSetpointRampRate   : REAL := 0.0;   // rate of change of setpoint, [1/sec]
+	itActValueFilterTime : REAL := 0.0;   // time const for actual value filter, [sec]
+	irOutRampRate        : REAL := 0.0;   // rate of change of controller output, [1/sec]
+	irDeviationTolerance : REAL := 1.0;   // control deviation at which the transition process is considered complete, [%]
+	irStabilizationTime  : REAL := 2.0;   // time after which the process is considered stable, if it is inside deadzone, [sec]
+	irOutLimitL          : REAL := 0.0;   // lower limit of controller's output, [%]
+	irOutLimitH          : REAL := 100.0; // higher limit of controller's output, [%]
+	irBackCalcFactor     : REAL := 1.0;   // time const for back calculation anti-windup, [sec] 
+	irResetValue         : REAL := 0;     // value applied when reset is active 
+END_STRUCT
+END_TYPE

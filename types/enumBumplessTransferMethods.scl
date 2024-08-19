@@ -1,0 +1,8 @@
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE enumBumplessTransferMethods :
+(
+    TRACK_SETPOINT    := 0, // SP tracks the PV. After switch to auto SP returns to previous value using rate limiter. Setpoint rate limiter must be non-zero!	
+    SUPPRESS_P_ACTION := 1  // P-action of controller is suppressed until the process stabilizes. Only Integral action.	Recomended if you not use setpoint rate limiter
+);
+END_TYPE
