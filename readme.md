@@ -2,29 +2,29 @@
 ------
 ## Table of contents
 
-1. [Preface](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#1--preface)\
-    1.1. [About this repository](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#11--about-this-repository)\
-    1.2. [Target audience](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#12--target-audience-target)\
-    1.3. [Structure of repository](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#13--structure-of-repository-structure)
-2. [PID_Controller (FB)](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2--pid_controller-fb)\
-    2.1. [Short description](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#21--short-description)\
-    2.2. [Block interface](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#22--block-interface)\
-    2.3. [Functional description](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#23--functional-description)\
-          2.3.1. [PID Algorithm](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#231-pid-algorithm)\
-          2.3.2. [Functional diagram](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#232-functional-diagram)\
-          2.3.3. [List of functions](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#233-list-of-functions)\
-          2.3.4. [Scaling](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#234-scaling)\
-          2.3.5. [Modes](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#235-modes)\
-          2.3.6. [Bumpless transfer](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#236-bumpless-transfer)\
-          2.3.7. [Filters](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#237-filters)\
-          2.3.8. [Rate limit](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#238-rate-limit)\
-          2.3.9. [Inversion of control direction](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#239-inversion-of-control-direction)\
-          2.3.10. [Deadband](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2310-deadband)\
-          2.3.11. [Offset](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2311-offset)\
-          2.3.12. [Anti-windup](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2312-anti-windup)\
-          2.3.13. [Limit](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2313-limit)\
-	2.4. [Referenced objects](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#24-referenced-objects)\
-	2.5. [Change Log](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#25-change-log) 
+1. [Preface](https://github.com/controltheplant/PID-controller/blob/main/readme.md#1--preface)\
+    1.1. [About this repository](https://github.com/controltheplant/PID-controller/blob/main/readme.md#11--about-this-repository)\
+    1.2. [Target audience](https://github.com/controltheplant/PID-controller/blob/main/readme.md#12--target-audience)\
+    1.3. [Structure of repository](https://github.com/controltheplant/PID-controller/blob/main/readme.md#13--structure-of-repository)
+2. [PID_Controller (FB)](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2--pid_controller-fb)\
+    2.1. [Short description](https://github.com/controltheplant/PID-controller/blob/main/readme.md#21--short-description)\
+    2.2. [Block interface](https://github.com/controltheplant/PID-controller/blob/main/readme.md#22--block-interface)\
+    2.3. [Functional description](https://github.com/controltheplant/PID-controller/blob/main/readme.md#23--functional-description)\
+          2.3.1. [PID Algorithm](https://github.com/controltheplant/PID-controller/blob/main/readme.md#231-pid-algorithm)\
+          2.3.2. [Functional diagram](https://github.com/controltheplant/PID-controller/blob/main/readme.md#232-functional-diagram)\
+          2.3.3. [List of functions](https://github.com/controltheplant/PID-controller/blob/main/readme.md#233-list-of-functions)\
+          2.3.4. [Scaling](https://github.com/controltheplant/PID-controller/blob/main/readme.md#234-scaling)\
+          2.3.5. [Modes](https://github.com/controltheplant/PID-controller/blob/main/readme.md#235-modes)\
+          2.3.6. [Bumpless transfer](https://github.com/controltheplant/PID-controller/blob/main/readme.md#236-bumpless-transfer)\
+          2.3.7. [Filters](https://github.com/controltheplant/PID-controller/blob/main/readme.md#237-filters)\
+          2.3.8. [Rate limit](https://github.com/controltheplant/PID-controller/blob/main/readme.md#238-rate-limit)\
+          2.3.9. [Inversion of control direction](https://github.com/controltheplant/PID-controller/blob/main/readme.md#239-inversion-of-control-direction)\
+          2.3.10. [Deadband](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2310-deadband)\
+          2.3.11. [Offset](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2311-offset)\
+          2.3.12. [Anti-windup](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2312-anti-windup)\
+          2.3.13. [Limit](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2313-limit)\
+	2.4. [Referenced objects](https://github.com/controltheplant/PID-controller/blob/main/readme.md#24-referenced-objects)\
+	2.5. [Change Log](https://github.com/controltheplant/PID-controller/blob/main/readme.md#25-change-log) 
 ------
 ## 1  Preface
 
@@ -228,7 +228,7 @@ The `PID_Controller` function block has the following functions:
 
 #### 2.3.4 Scaling
 
-Setpoint, actual value, and controller output must be scaled to the same range. This is necessary to avoid the influence of the change in the process value measurement range on the control loop gain. The setpoint, actual value, and controller output are always scaled to an internal range from 0 to 100%. The range of setpoint and actual value is always the same. That range should be specified in the `rangeLo` and `rangeHi` [inputs](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#input-parameter) of the block. Values of `rangeLo` and `rangeHi` parameters have to be specified in engineering units (bar, m<sup>3</sup>/s, etc.).
+Setpoint, actual value, and controller output must be scaled to the same range. This is necessary to avoid the influence of the change in the process value measurement range on the control loop gain. The setpoint, actual value, and controller output are always scaled to an internal range from 0 to 100%. The range of setpoint and actual value is always the same. That range should be specified in the `rangeLo` and `rangeHi` [inputs](https://github.com/controltheplant/PID-controller/blob/main/readme.md#input-parameter) of the block. Values of `rangeLo` and `rangeHi` parameters have to be specified in engineering units (bar, m<sup>3</sup>/s, etc.).
 
 #### 2.3.5 Modes
 
@@ -241,11 +241,11 @@ The `PIC_Controller` function block can work in the following modes:
 
 ##### Auto mode
 
-In auto mode, the PID controller calculates the controller's output based on setpoint and actual value with the law described in [PID Algorithm](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#231-pid-algorithm) section. Set the `manual` input of the block to a `FALSE` value to activate Auto mode.
+In auto mode, the PID controller calculates the controller's output based on setpoint and actual value with the law described in [PID Algorithm](https://github.com/controltheplant/PID-controller/blob/main/readme.md#231-pid-algorithm) section. Set the `manual` input of the block to a `FALSE` value to activate Auto mode.
 
 ##### Manual mode
 
-In Manual mode operator can set the controller's output directly. The controller's output is determined by the [`manualValue`](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#inout-parameter) parameter of the function block. The setpoint and actual value don't affect the controller's output in this mode. Bumpless transfer between Auto and Manual modes is ensured. When in Auto mode, the manual setpoint follows the controller's output. This is why the `manualValue` parameter is placed in the 'In/Out' section of the block interface. [**Bumpless transfer**](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#236-bumpless-transfer) from Manual to Auto mode is described in the corresponding section. Set the `manual` input of the block to a `TRUE` value to activate Manual mode.
+In Manual mode operator can set the controller's output directly. The controller's output is determined by the [`manualValue`](https://github.com/controltheplant/PID-controller/blob/main/readme.md#inout-parameter) parameter of the function block. The setpoint and actual value don't affect the controller's output in this mode. Bumpless transfer between Auto and Manual modes is ensured. When in Auto mode, the manual setpoint follows the controller's output. This is why the `manualValue` parameter is placed in the 'In/Out' section of the block interface. [**Bumpless transfer**](https://github.com/controltheplant/PID-controller/blob/main/readme.md#236-bumpless-transfer) from Manual to Auto mode is described in the corresponding section. Set the `manual` input of the block to a `TRUE` value to activate Manual mode.
 
 ##### Tracking mode
 
@@ -266,7 +266,7 @@ Reset mode is used to reset the errors that occurred in the `PID_Controller` blo
 
 Bumpless transfer means that when switching between modes, there is no jump in the controller's output value. Bumpless transfer from Auto to Manual mode is achieved by making the `manualValue` follow the controller's output value. Transferring from Auto mode to other modes (tracking, hold, reset) is not bumpless, i.e. it has to be done using external software.
 
-There are two methods of bumpless transfer from Manual mode to Auto, that could be selected by the user. A particular method has to be specified in [`settings`](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#typepidsettings) structure of the block's interface, in the field `iwBumplessTransferMethod`. Please refer to the [`enumBumplessTransferMethods`](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#enumbumplesstransfermethods) data type.
+There are two methods of bumpless transfer from Manual mode to Auto, that could be selected by the user. A particular method has to be specified in [`settings`](https://github.com/controltheplant/PID-controller/blob/main/readme.md#typepidsettings) structure of the block's interface, in the field `iwBumplessTransferMethod`. Please refer to the [`enumBumplessTransferMethods`](https://github.com/controltheplant/PID-controller/blob/main/readme.md#enumbumplesstransfermethods) data type.
 
 ##### Setpoint tracking
 
@@ -329,7 +329,7 @@ To overcome these shortcomings, adaptive activation and deactivation of the dead
 
 #### 2.3.11 Offset
 
-Feedforward control strategies and direct disturbance rejection are possible with the `PIC_Controller` block via the offset function. If the value of the disturbance variable is measured or estimated, or an external feedforward compensator is utilized, assign the feedforward control setpoint to an [`offset`](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#input-parameter) input of the block. 
+Feedforward control strategies and direct disturbance rejection are possible with the `PIC_Controller` block via the offset function. If the value of the disturbance variable is measured or estimated, or an external feedforward compensator is utilized, assign the feedforward control setpoint to an [`offset`](https://github.com/controltheplant/PID-controller/blob/main/readme.md#input-parameter) input of the block. 
 
 > [!IMPORTANT]
 > The feedforward control setpoint must be scaled to a range from 0 to 100% by external software.
@@ -341,7 +341,7 @@ The offset value is influenced by the output rate limit function, anti-windup, a
 Nonlinearities of the control element caused by its physical limitations can lead to a phenomenon known as integrator windup, which is expressed in the fact that controller output reaches the actuator limits. When the actuator is saturated (i.e. control signal is at the limits of the actuator) and no countermeasures are taken, it may take a long time to return the control signal to normal value. Integrator windup can be caused by such incidents as a failure of control loop equipment, disruption of the technological process, large setpoint step change, or large disturbances. The `PID_Controller` block has three methods to prevent integrator windup:
 
 > [!IMPORTANT]
-> Higher and lower limits of the actuator must be specified via `settings.irOutLimitH` and `settings.irOutLimitL` parameters. Their default values are 100% and 0% respectively, which fits most cases. Refer to [Limit](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2313-limit) function.
+> Higher and lower limits of the actuator must be specified via `settings.irOutLimitH` and `settings.irOutLimitL` parameters. Their default values are 100% and 0% respectively, which fits most cases. Refer to [Limit](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2313-limit) function.
 
 ##### Integrator clamping
 
@@ -380,7 +380,7 @@ The value of the measured actuator position is not needed with this method.
 
 #### 2.3.13 Limit
 
-The limit function allows to constrain the range of the output value to a user-specified range. To specify the range of the controller output value, set the `settings.irOutLimitH` for a high limit and `settings.irOutLimitL` for a low limit. Those values will be taken into account for [Anti-windup](https://github.com/controltheplant/PID-controller/new/main?filename=README.md#2312-anti-windup) function.
+The limit function allows to constrain the range of the output value to a user-specified range. To specify the range of the controller output value, set the `settings.irOutLimitH` for a high limit and `settings.irOutLimitL` for a low limit. Those values will be taken into account for [Anti-windup](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2312-anti-windup) function.
 
 ### 2.4 Referenced objects
 
