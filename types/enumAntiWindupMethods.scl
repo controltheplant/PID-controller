@@ -1,9 +1,0 @@
-{attribute 'qualified_only'}
-{attribute 'strict'}
-TYPE enumAntiWindupMethods :
-(
-	CLAMPING,        // integration stops when saturation is reched
-	BACK_CALC_MODEL, // backward calculation, ramp function used as actuator model
-	BACK_CALC_REAL   // backward calculation, measured actuator position used
-)UINT := CLAMPING;
-END_TYPE

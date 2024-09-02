@@ -27,8 +27,9 @@ VAR
     ixAutoOld     : BOOL := FALSE; // mode in prev cycle
     
     trSetpointScaled, trActualValScaled : REAL; // scaled from eng. units to range 0..100%
-    tlCurrentTime                       : LWORD;
-    trSetpointAfterRateLimiter          : REAL := 0;   
+    tlCurrentTime                       : LWORD;	
+    trSetpointPostRateLimiter           : REAL := 0;   
+	trOut                               : REAL := 0; // temporary calculation of `srOut + srDelta`
 END_VAR
 VAR_STAT
     settings                                   : typePIDSettings;   // structure containing advanced PID settings
@@ -50,13 +51,15 @@ VAR_STAT
     srOffsetOld   : REAL := 0;      // previous offset value
     srDerivative  : REAL;           // derivative part of PID 
     srBackCalc    : REAL;           // value of actuator saturation. Used for back-calculation anti-windup algorithm    
+	srPreInt      : REAL;           // value before integral term
+	srPreIntOld   : REAL;           // value before integral term on previous plc cycle
     d             : REAL;           // factor for DT1 parameter calculation
     sxSuppressP_Action             : BOOL := FALSE; // 1=suppress P-action 
     qxIsIncLimited, qxIsDecLimited : BOOL;          // 1=increment/decrement of controller's output limited
 	qxIsInSteadyState              : BOOL;          // determines whether the process is in steady state
 	qxIsInSteadyStateOld           : BOOL;          // steady state in previous cycle
 	
-	trErrorBeforeDeadband : REAL;
+	trErrorPreDeadband : REAL;
 END_VAR
 
 VAR CONSTANT
@@ -81,25 +84,28 @@ VAR CONSTANT
 //     MODE_TRACK      : INT := 6;   // output follows the tracking value     
 END_VAR
 
-{region Description header} 
-//================================================================================== 
+{region BLOCK INFO HEADER} 
+//=================================================================================== 
 // controltheplant / (C) Copyright (2024) 
-//---------------------------------------------------------------------------------- 
-// Title:            PID_Compact 
-// Comment/Function: PID controller 
+//----------------------------------------------------------------------------------- 
+// Title:            PID_Controller 
+// Comment/Function: PID controller with deadband, filters, rate limiters and more...
 // Library/Family:   
-// Author:           controltheplant 
-// Target System:    CODESYS Control Win V3 
+// Author:           [controltheplant](https://github.com/controltheplant/PID-controller) 
+// Target System:    CODESYS Control Win V3.5.20 
 // Engineering:      CODESYS V3.5 SP20 (64 bit) 
 // Restrictions:     Execute in cyclic interrupt 
-// Requirements: 
-//---------------------------------------------------------------------------------- 
+// Requirements:     
+//----------------------------------------------------------------------------------- 
 // Change log table: 
 // Version     | Date       | Expert in charge | Changes applied 
-//-------------|------------|------------------|------------------------------------ 
+//-------------|------------|------------------|------------------------------------- 
 //   1.0.0     | 2024-08    | controltheplant  | First released version 
-//================================================================================== 
-{endregion} 
+//   1.1.0     | 2024-09    | controltheplant  |
+//               - back calculation function is converted to the form used in Matlab;  
+//               - further adaptation of various functions to incremental form.
+//=================================================================================== 
+{endregion}
 
 {region DESCRIPTION}
 (* 
@@ -139,8 +145,9 @@ IF NOT sxInit THEN
     errorID       := STATUS_NO_ERRORS;
     sxInit        := TRUE;
     slOldTime     := T_PLC_US();
-    srErrorOld    := srError;
+    srError       := 0;
     srOffsetOld   := offset;
+    srPreInt      := 0;
     srDerivative  := 0;       
     srOut         := manualValue;
     RETURN;
@@ -191,13 +198,13 @@ trSetpointScaled  := SCALE_R(X := setpoint,
 IF (NOT ixAuto) 
     AND settings.iwBumplessTransferMethod = enumBumplessTransferMethods.TRACK_SETPOINT
 THEN
-    trSetpointScaled := trActualValScaled;		
+    trSetpointScaled := trActualValScaled;      
 END_IF
 IF     (settings.iwBumplessTransferMethod = enumBumplessTransferMethods.TRACK_SETPOINT)
    AND (settings.irSetpointRampRate <= EPS)
 THEN
     error   := TRUE;
-    errorID := ERR_CANT_TRACK_SETP;		
+    errorID := ERR_CANT_TRACK_SETP;     
 END_IF
 {endregion}
 
@@ -216,7 +223,7 @@ END_IF
 instSetpointRateLimiter(in     := instSetpointFilter.out,  
                         rate   := settings.irSetpointRampRate,
                         bypass := NOT ixAuto,
-                        out    => trSetpointAfterRateLimiter);
+                        out    => trSetpointPostRateLimiter);
 IF instSetpointRateLimiter.error THEN
     error   := TRUE;
     errorID := instSetpointRateLimiter.errorID;
@@ -238,22 +245,22 @@ IF (settings.irDeviationTolerance <= EPS) OR (settings.irDeviationTolerance > 50
 END_IF 
 IF settings.irStabilizationTime < 0 THEN
     error   := TRUE;
-	errorID := ERR_BAD_STAB_TIME;
+    errorID := ERR_BAD_STAB_TIME;
 END_IF
-IF settings.ixInverted THEN		
-    srError := instActualValFilter.out - trSetpointAfterRateLimiter;                            
+IF settings.ixInvert THEN       
+    srError := instActualValFilter.out - trSetpointPostRateLimiter;                            
 ELSE    
-    srError := trSetpointAfterRateLimiter - instActualValFilter.out;                            
+    srError := trSetpointPostRateLimiter - instActualValFilter.out;                            
 END_IF
 qxIsInSteadyStateOld := qxIsInSteadyState;
 instFindSteadyState(value             := srError, 
                     tolerance         := settings.irDeadband, 
                     stabilizationTime := settings.irStabilizationTime, 
-					cycleTime         := srCycleTime,
+                    cycleTime         := srCycleTime,
                     isInSteadyState   => qxIsInSteadyState,
                     error             => error,
                     errorID           => errorID);    
-trErrorBeforeDeadband := srError;   // just to monitor the error before the dead zone
+trErrorPreDeadband := srError;   // just to monitor the error before the dead zone
 srError := DeadBand(X        := srError, 
                     deadZone := settings.irDeadband * BOOL_TO_REAL(qxIsInSteadyState));  // dead zone is applied only in steady state 
 {endregion}
@@ -270,10 +277,10 @@ THEN
     RETURN;     
 END_IF
 {endregion}
-		
+        
 IF ixAuto THEN 
     srDeltaP := srError - srErrorOld;   
-    {region SUPPRESS P-ACTION}	
+    {region SUPPRESS P-ACTION}  
         IF     (settings.iwBumplessTransferMethod = enumBumplessTransferMethods.SUPPRESS_P_ACTION)
            AND (NOT ixAutoOld)                                      // trigger for switching from manual to auto
            AND (ABS(srError) > settings.irDeviationTolerance)   
@@ -286,9 +293,11 @@ IF ixAuto THEN
     IF settings.irTI <= EPS THEN // check for validity of integral time
         srDeltaI := 0;
     ELSE    
-        srDeltaI := srCycleTime * 0.5 * (srError + srErrorOld) / settings.irTI; // Trapezoid method
+        srPreIntOld := srPreInt;
+        srPreInt    := srError / settings.irTI - srBackCalc;        
+        srDeltaI    := srCycleTime * 0.5 * (srPreInt + srPreIntOld); // Trapezoid method
     END_IF
-// get derivative component	 
+// get derivative component  
     IF     (settings.irTdF <= EPS) 
         OR (settings.irTd  <= EPS) 
     THEN // check for validity of filter time in derivative channel
@@ -303,31 +312,26 @@ IF ixAuto THEN
     srDeltaOffset := offset - srOffsetOld;                   
     srOffsetOld   := offset;   
     
-    srDelta := (srDeltaP + srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset; // Ideal (ISA) form	
-	IF sxSuppressP_Action THEN
-		srDelta := (srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset;
-	END_IF	
+    srDelta := (srDeltaP + srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset; // Ideal (ISA) form,   preliminary calculation
+    trOut   := srOut + srDelta;
+    IF sxSuppressP_Action THEN
+        srDelta := (srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset;
+    END_IF  
     IF settings.irOutRampRate < 0.0 THEN
         error   := TRUE;
         errorID := ERR_BAD_RATE;
         RETURN;
-	END_IF	    
-    {region ANTI WINDUP}		
+    END_IF      
+    {region ANTI WINDUP}        
     CASE settings.iwAntiWindupMethod OF 
     enumAntiWindupMethods.CLAMPING :
          
-        srBackCalc := 0;    		
-	    IF (settings.irOutRampRate > 0.0) THEN
-            // rate limit for output
-            srDelta := LIMIT(-settings.irOutRampRate * srCycleTime, 
-                              srDelta,
-                              settings.irOutRampRate * srCycleTime);  
-        END_IF  
-		// integration is limited to prevent saturation
-        IF (srOut + srDelta) > settings.irOutLimitH THEN
+        srBackCalc := 0;              
+        // integration is limited to prevent saturation
+        IF trOut > settings.irOutLimitH THEN
             srDelta := settings.irOutLimitH - srOut;
         END_IF
-        IF (srOut + srDelta) < settings.irOutLimitL THEN
+        IF trOut < settings.irOutLimitL THEN
             srDelta := settings.irOutLimitL - srOut;
         END_IF      
      
@@ -337,52 +341,63 @@ IF ixAuto THEN
             error   := TRUE;
             errorID := ERR_BACK_CALC_T;   
         END_IF
-        instActuatorModel(in     := srOut + srDelta,
+        instActuatorModel(in     := trOut,
                           rate   := settings.irOutRampRate);    
-		srBackCalc := (srOut + srDelta - LIMIT(settings.irOutLimitL, instActuatorModel.out , settings.irOutLimitH)) / settings.irBackCalcFactor;				         
-	    srDelta    := srDelta - srBackCalc;	
-	
+        srBackCalc  := (trOut - LIMIT(settings.irOutLimitL, instActuatorModel.out , settings.irOutLimitH)) / settings.irBackCalcFactor;                                          
+        srPreInt    := srError / settings.irTI - srBackCalc;     
+        srDeltaI    := srCycleTime * 0.5 * (srPreInt + srPreIntOld); // Trapezoid method
+        srDelta     := (srDeltaP + srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset;   // recalculation with new `srBackCalc` value      
+    
     enumAntiWindupMethods.BACK_CALC_REAL : 
      
         IF settings.irBackCalcFactor <= EPS THEN
             error   := TRUE;
             errorID := ERR_BACK_CALC_T;   
         END_IF    
-        srBackCalc := (srOut + srDelta - LIMIT(settings.irOutLimitL, actuatorPos, settings.irOutLimitH)) / settings.irBackCalcFactor;
-	    srDelta    := srDelta - srBackCalc;	
+        srBackCalc  := (trOut - LIMIT(settings.irOutLimitL, actuatorPos, settings.irOutLimitH)) / settings.irBackCalcFactor;		
+        srPreInt    := srError / settings.irTI - srBackCalc;     
+        srDeltaI    := srCycleTime * 0.5 * (srPreInt + srPreIntOld); // Trapezoid method
+        srDelta     := (srDeltaP + srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset;   // recalculation with new `srBackCalc` value
+        
     ELSE
         error   := TRUE;
         errorID := ERR_BAD_ANTIWINDUP;
         RETURN;
     END_CASE
-    {endregion}		
-// controller output	
-    srOut := srOut + srDelta;
-	
+    {endregion}     
+    
     {region CO MEAN VALUE}
     // this is ensure the actual value is in the middle of the dead zone,
-    // and not at the edge of the dead zone	
-	instOutAverage(enable      := (settings.irDeadband > 0.0) AND NOT qxIsInSteadyState,
-	               x           := srOut, 
-	               sizeOfArray := REAL_TO_INT(settings.irStabilizationTime / srCycleTime), 
-	               reset       := reset, 	
-	               error       => error, 
-	               errorID     => errorID); 	           		 
+    // and not at the edge of the dead zone 
+    instOutAverage(enable      := (settings.irDeadband > 0.0) AND NOT qxIsInSteadyState,
+                   x           := trOut, 
+                   sizeOfArray := REAL_TO_INT(settings.irStabilizationTime / srCycleTime), 
+                   reset       := reset,    
+                   error       => error, 
+                   errorID     => errorID);                      
     IF qxIsInSteadyState AND (NOT qxIsInSteadyStateOld) THEN
-        srOut := instOutAverage.averageValue;	    
+        srDelta := instOutAverage.averageValue - srOut;         // equivalent of `srOut := instOutAverage.averageValue`         
     END_IF;    
-	{endregion}
-	
-    manualValue := srOut;    // manual value is tracking the CO in Auto mode		      	   
+    {endregion} 
+    
+    manualValue := trOut;    // manual value is tracking the CO in Auto mode                   
 ELSIF manual THEN
-    srOut := LIMIT(settings.irOutLimitL, manualValue, settings.irOutLimitH);
+    srDelta := LIMIT(settings.irOutLimitL, manualValue, settings.irOutLimitH) - srOut;     
 ELSIF track THEN
-    srOut := LIMIT(settings.irOutLimitL, trackingValue, settings.irOutLimitH);
-END_IF	
+    srDelta := LIMIT(settings.irOutLimitL, trackingValue, settings.irOutLimitH) - srOut;    
+END_IF      
+IF (settings.irOutRampRate > 0.0) THEN
+    // rate limit for output
+    srDelta := LIMIT(-settings.irOutRampRate * srCycleTime, 
+                      srDelta,
+                      settings.irOutRampRate * srCycleTime);  
+END_IF
+// controller output    
+srOut := srOut + srDelta;   
 {endregion}  
 
 {region RESET}
-IF reset THEN	
+IF reset THEN   
     srOut   := LIMIT(settings.irOutLimitL ,settings.irResetValue, settings.irOutLimitH); 
     error   := FALSE;
     errorID := STATUS_NO_ERRORS;
@@ -392,9 +407,9 @@ END_IF
 {region CHECK LIMITS AND RATE}
 qxIsSaturated  := (srOut >= settings.irOutLimitH) OR (srOut <= settings.irOutLimitL);
 qxIsIncLimited := (srDelta >= settings.irOutRampRate * srCycleTime   
-		          AND settings.irOutRampRate > 0);
+                  AND settings.irOutRampRate > 0);
 qxIsDecLimited := (srDelta <= -settings.irOutRampRate * srCycleTime 
-	              AND settings.irOutRampRate > 0);	
+                  AND settings.irOutRampRate > 0);  
 {endregion}
 
 {region OUT}   

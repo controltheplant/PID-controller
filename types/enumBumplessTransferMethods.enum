@@ -1,0 +1,28 @@
+{region BLOCK INFO HEADER}
+    //===============================================================================
+    // controltheplant / (c)Copyright (2024)
+    //-------------------------------------------------------------------------------
+    // Title:            enaumBumplessTransferMethods
+    // Comment/Function: enumeration of the methods of bumpless transfer for the `PID_Controller`
+    // Library/Family:   
+    // Author:           (controltheplant / https://github.com/controltheplant/PID-controller)
+    // Tested with:      CODESYS Control Win V3.5.20 
+    // Engineering:      CODESYS V3.5 SP20
+    // Restrictions:     
+    // Requirements:     `typePIDSettings` DUT
+    //-------------------------------------------------------------------------------
+    // Change log table:
+    // Version  | Date       | Expert in charge       | Changes applied
+    //----------|------------|------------------------|------------------------------
+    // 01.00.00 | 2024-08-20 | controltheplant        | First released version
+    //===============================================================================
+{endregion}
+
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE enumBumplessTransferMethods :
+(
+    TRACK_SETPOINT    := 0, // SP tracks the PV. After switch to auto SP returns to previous value using rate limiter. Setpoint rate limiter must be non-zero!	
+    SUPPRESS_P_ACTION := 1  // P-action of controller is suppressed until the process stabilizes. Only Integral action.	Recomended if you not use setpoint rate limiter
+);
+END_TYPE

@@ -1,3 +1,24 @@
+    {region BLOCK INFO HEADER}
+      //===============================================================================
+      // controltheplant / (c)Copyright (2024)
+      //-------------------------------------------------------------------------------
+      // Title:            PID settings
+      // Comment/Function: structure for advanced settings for `PID_Controller`
+      // Library/Family:   
+      // Author:           controltheplant / https://github.com/controltheplant/PID-controller
+      // Tested with:      CODESYS Control Win V3.5.20 
+      // Engineering:      CODESYS V3.5 SP20
+      // Restrictions:     
+      // Requirements:     `PID_Controller` FB
+      //-------------------------------------------------------------------------------
+      // Change log table:
+      // Version  | Date       | Expert in charge       | Changes applied
+      //----------|------------|------------------------|------------------------------
+      // 01.00.00 | 2024-08-20 | controltheplant        | First released version
+      //===============================================================================
+    {endregion}
+
+
 TYPE typePIDSettings :
 STRUCT
 	iwAntiWindupMethod       : enumAntiWindupMethods;       // method selected to prevent integrator saturation
