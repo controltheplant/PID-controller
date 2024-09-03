@@ -27,17 +27,17 @@ VAR
     ixAutoOld     : BOOL := FALSE; // mode in prev cycle
     
     trSetpointScaled, trActualValScaled : REAL; // scaled from eng. units to range 0..100%
-    tlCurrentTime                       : LWORD;	
+    tlCurrentTime                       : LWORD;    
     trSetpointPostRateLimiter           : REAL := 0;   
-	trOut                               : REAL := 0; // temporary calculation of `srOut + srDelta`
+    trOut                               : REAL := 0; // temporary calculation of `srOut + srDelta`
 END_VAR
 VAR_STAT
     settings                                   : typePIDSettings;   // structure containing advanced PID settings
     instSetpointFilter, instActualValFilter    : LSim_PT1;
     instSetpointRateLimiter, instActuatorModel : RateLimiter;   
     instOutAverage                             : MovingAverage;
-	instFindSteadyState                        : FindSteadyState;
-	
+    instFindSteadyState                        : FindSteadyState;
+    
     sxInit        : BOOL := FALSE;  // first call
     slOldTime     : LWORD;          // prev cycle system time, [usec]
     srOut         : REAL := 0;      // controller output             
@@ -51,30 +51,30 @@ VAR_STAT
     srOffsetOld   : REAL := 0;      // previous offset value
     srDerivative  : REAL;           // derivative part of PID 
     srBackCalc    : REAL;           // value of actuator saturation. Used for back-calculation anti-windup algorithm    
-	srPreInt      : REAL;           // value before integral term
-	srPreIntOld   : REAL;           // value before integral term on previous plc cycle
+    srPreInt      : REAL;           // value before integral term
+    srPreIntOld   : REAL;           // value before integral term on previous plc cycle
     d             : REAL;           // factor for DT1 parameter calculation
     sxSuppressP_Action             : BOOL := FALSE; // 1=suppress P-action 
     qxIsIncLimited, qxIsDecLimited : BOOL;          // 1=increment/decrement of controller's output limited
-	qxIsInSteadyState              : BOOL;          // determines whether the process is in steady state
-	qxIsInSteadyStateOld           : BOOL;          // steady state in previous cycle
-	
-	trErrorPreDeadband : REAL;
+    qxIsInSteadyState              : BOOL;          // determines whether the process is in steady state
+    qxIsInSteadyStateOld           : BOOL;          // steady state in previous cycle
+    
+    trErrorPreDeadband : REAL;
 END_VAR
 
 VAR CONSTANT
     MICROSECONDS_IN_SEC : REAL := 1.0E-6;
-	EPS                 : REAL := 1.0E-44;   // smallest real value
-	
-    STATUS_NO_ERRORS    : WORD := 0;        	
+    EPS                 : REAL := 1.0E-44;   // smallest real value
+    
+    STATUS_NO_ERRORS    : WORD := 0;            
     ERR_BAD_LIMITS      : WORD := 16#8201;   // bad LL, LH
     ERR_CANT_TRACK_SETP : WORD := 16#8202;   // 'TRACK_SETPOINT' method selected, but setpoint ramp is zero    
     ERR_BAD_RATE        : WORD := 16#8203;   // rate of change is negative
     ERR_NO_CYCLE        : WORD := 16#8001;   // PLC cycle time is negative or zero
     ERR_BACK_CALC_T     : WORD := 16#8205;   // bad back calculation factor     
     ERR_BAD_ANTIWINDUP  : WORD := 16#8207;   // error in anti-windup settings    
-	ERR_BAD_STAB_TIME   : WORD := 16#8209;   // stabilization time should be positive
-	ERR_BAD_DEV_TOL     : WORD := 16#820A;   // deviation tolerance must be in range from 0 to 50%
+    ERR_BAD_STAB_TIME   : WORD := 16#8209;   // stabilization time should be positive
+    ERR_BAD_DEV_TOL     : WORD := 16#820A;   // deviation tolerance must be in range from 0 to 50%
     ERR_BAD_PID_COEFFS  : WORD := 16#820B;   // wrong PID parameters
     
 //     MODE_DEACTIVATE : INT := 0;   // controller inactive, out = 0
@@ -354,7 +354,7 @@ IF ixAuto THEN
             error   := TRUE;
             errorID := ERR_BACK_CALC_T;   
         END_IF    
-        srBackCalc  := (trOut - LIMIT(settings.irOutLimitL, actuatorPos, settings.irOutLimitH)) / settings.irBackCalcFactor;		
+        srBackCalc  := (trOut - LIMIT(settings.irOutLimitL, actuatorPos, settings.irOutLimitH)) / settings.irBackCalcFactor;        
         srPreInt    := srError / settings.irTI - srBackCalc;     
         srDeltaI    := srCycleTime * 0.5 * (srPreInt + srPreIntOld); // Trapezoid method
         srDelta     := (srDeltaP + srDeltaI + srDeltaD) * settings.irKP + srDeltaOffset;   // recalculation with new `srBackCalc` value
