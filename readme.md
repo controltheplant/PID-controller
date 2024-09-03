@@ -208,7 +208,7 @@ The block diagram shown in Figure 1 is simplified. Some blocks like dead zone, a
 
 Functional diagram of `PID_Controller` block is shown on Figure2:
 
-| ![PID Functional scheme](https://github.com/user-attachments/assets/6725e9dd-de22-4b65-8891-b3ed03ff23b2) |
+| ![PID Functional scheme](https://github.com/user-attachments/assets/9cdbbe50-2d6a-4ba9-9663-8b309ee307f2) |
 |:------:|
 |Figure 2 - Functional diagram of PID controller|
 
@@ -295,14 +295,14 @@ Filters are available for both setpoint and actual value channels. The filters c
 
 #### 2.3.8 Rate limit
 
-The rate limit function limits the rate of change of the input value. It results in smoothing of input value jumps and a decrease in the rate of change of the signal. Rate limiters are available in the setpoint channel and controller output. Set the `settings.irSetpointRampRate` parameter to a non-zero value to activate the setpoint rate limiter and the `settings.irOutRampRate` parameter to activate the rate limiter for the controller output.
+The rate limit function limits the rate of change of the input value. It results in smoothing of input value jumps and a decrease in the rate of change of the signal. Rate limiters are available in the setpoint channel and controller output. Set the `settings.irSetpointRampRate` parameter to a non-zero value to activate the setpoint rate limiter and the `settings.irOutRampRate` parameter to activate the rate limiter for the controller output. The rate limiter in the controller output channel is active in all controller modes.
 
 > [!TIP]
 > You can use a rate limiter for controller output to prevent the damage of controllable object due to a high rate of change of the control signal, for example, to prevent the water hammer effect. When the maximum rate of change of controller output is reached, block output `limitsActive` is set. The rate limiter is a nonlinear element and can lead to instability of the control loop and failure of the actual value to reach the setpoint. I recommend adjusting the PID tuning softer when block output `limitsActive` is blinking or constantly on.
 
 #### 2.3.9 Inversion of control direction
 
-For some processes related to the decrease of material balance or energy, a negative control gain is necessary. Examples of such processes may include cooling, level control with a control element on a drain line, vacuum control. Such a process can be identified as follows: when the controller's output value increases, the process variable decreases. However, the negative control gain is forbidden for this block. Use the `settings.ixInverted` bit in this case. Set this bit to `TRUE` to invert the control direction.
+For some processes related to the decrease of material balance or energy, a negative control gain is necessary. Examples of such processes may include cooling, level control with a control element on a drain line, vacuum control. Such a process can be identified as follows: when the controller's output value increases, the process variable decreases. However, the negative control gain is forbidden for this block. Use the `settings.ixInvert` bit in this case. Set this bit to `TRUE` to invert the control direction.
 
 #### 2.3.10 Deadband
 
@@ -322,7 +322,7 @@ There are several disadvantages when the Deadband function is active:
 - actual value doesn't reach the setpoint itself, but only the edge of the deadzone, since the control deviation becomes zero at the edge of deadzone;
 - actual value may settle into steady states that significantly differ from the setpoint for extended periods of time. If that steady states occurs at the edge of the dead zone, even the smallest deviations will trigger the control intervention, i.e. wear of actuator and energy consumption;
 
-To overcome these shortcomings, adaptive activation and deactivation of the dead zone is provided. Deadzone is activated when the absolute value of control deviation becomes less than the `settings.irDeadband` value for the time specified in the `settings.irStabilizationTime` parameter. In addition to that, the controller output is set to a moving average of its previous values. This helps to settle actual value close to the middle of the dead zone, and not at the edge of it. Deadband is temporarily deactivated when a large control deviation occurs (i.e. dead zone is exited) and reactivated again when the controller returns the actual value to the proximity of the setpoint. The transition process is thus freed from the negative influence of the dead zone.
+To overcome these drawbacks, adaptive activation and deactivation of the dead zone is provided. Deadzone is activated when the absolute value of control deviation becomes less than the `settings.irDeadband` value for the time specified in the `settings.irStabilizationTime` parameter. In addition to that, the controller output is set to a moving average of its previous values. This helps to settle actual value close to the middle of the dead zone, and not at the edge of it. Deadband is temporarily deactivated when a large control deviation occurs (i.e. dead zone is exited) and reactivated again when the controller returns the actual value to the proximity of the setpoint. The transition process is thus freed from the negative influence of the dead zone.
 
 > [!TIP]
 > Set the `settings.irDeadband` parameter to a value of 2-3 times of standard deviation of controller output signal oscillations. Tune the `settings.irStabilizationTime` parameter according to the dynamics of your system. Make sure that the controller output settles in the middle of its previous oscillations.
@@ -356,7 +356,7 @@ settings.iwAntiWindupMethod := enumAntiWindupMethods.CLAMPING;
 If the actuator position is measured, it's possible to calculate the actual controller saturation value and subtract it from the integral term of the controller. Controller output will be recalculated and its value will not exceed the limits. The principle of back-calculation is shown in Figure 4.
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/68aad3c3-ffb4-4abf-844a-bd1c084fb9d9"  alt="Back calculation diagram"><br>
+    <img src="https://github.com/user-attachments/assets/cc372a7c-cfe5-4bc4-b307-f5640cc1ad19"  alt="Back calculation diagram"><br>
     Figure 4 - Functional scheme of back-calculation
 </p>
 
@@ -398,4 +398,5 @@ The limit function allows to constrain the range of the output value to a user-s
 
 | Version & Date | Change description |
 |-----|-----|
-| **01.00.00**<br/> 08.2024 | **controltheplant**<br /> First released version |
+| **01.00.00**<br/> 08.2024 | **controltheplant**<br/> First released version |
+| **01.01.00**<br/> 09.2024 | **controltheplant**<br/> - back calculation section changed <br/> - other minor fixes |
