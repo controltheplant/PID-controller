@@ -399,4 +399,4 @@ The limit function allows to constrain the range of the output value to a user-s
 | Version & Date | Change description |
 |-----|-----|
 | **01.00.00**<br/> 08.2024 | **controltheplant**<br/> First released version |
-| **01.01.00**<br/> 08.2024 | **controltheplant**<br/> - back calculation section changed <br/> - other minor fixes |
+| **01.01.00**<br/> 09.2024 | **controltheplant**<br/> - back calculation section changed <br/> - other minor fixes |
