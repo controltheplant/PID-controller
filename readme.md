@@ -208,7 +208,7 @@ The block diagram shown in Figure 1 is simplified. Some blocks like dead zone, a
 
 Functional diagram of `PID_Controller` block is shown on Figure2:
 
-| ![PID Functional scheme](https://github.com/user-attachments/assets/01ff8e79-5f16-4953-a689-a21012cad1f5) |
+| ![PID Functional scheme](https://github.com/user-attachments/assets/9cdbbe50-2d6a-4ba9-9663-8b309ee307f2) |
 |:------:|
 |Figure 2 - Functional diagram of PID controller|
 
@@ -356,7 +356,7 @@ settings.iwAntiWindupMethod := enumAntiWindupMethods.CLAMPING;
 If the actuator position is measured, it's possible to calculate the actual controller saturation value and subtract it from the integral term of the controller. Controller output will be recalculated and its value will not exceed the limits. The principle of back-calculation is shown in Figure 4.
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/bbd287cb-4583-4dc1-8490-5d2fd85cf010"  alt="Back calculation diagram"><br>
+    <img src="https://github.com/user-attachments/assets/cc372a7c-cfe5-4bc4-b307-f5640cc1ad19"  alt="Back calculation diagram"><br>
     Figure 4 - Functional scheme of back-calculation
 </p>
 
