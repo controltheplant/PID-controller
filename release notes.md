@@ -1,4 +1,4 @@
-v1.1.0, 09.2024\
+v1.1.0, 08.2024\
 **NEW:**
 - block info added to DUTs
 

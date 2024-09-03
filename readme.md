@@ -185,7 +185,7 @@ The `PIC_Controller` block implements **velocity-based** algorithm,  also known 
 - ease of implementation of such functions as bumpless transfer, anti-windup protection, rate limit;
 - ease of upgrading to a 3-step PID controller to drive integral-type actuators, like motor-driven valves.
 
-The internal algorithm of the PID Controller is given in the form of a block diagram of discrete z-transfer functions, which is shown in Figure 1:
+The internal structure of the PID Controller is given in the form of a block diagram of discrete z-transfer functions, which is shown in Figure 1:
 
 |![figure1](https://github.com/user-attachments/assets/73fbbf0f-c6ae-4083-bba0-54fce8ff29fb "Block diagram of PID Controller")|
 |:-----:|
@@ -208,7 +208,7 @@ The block diagram shown in Figure 1 is simplified. Some blocks like dead zone, a
 
 Functional diagram of `PID_Controller` block is shown on Figure2:
 
-| ![PID Functional scheme](https://github.com/user-attachments/assets/16837e12-5d3c-4b26-9ae5-f1b0938efda7) |
+| ![PID Functional scheme](https://github.com/user-attachments/assets/6725e9dd-de22-4b65-8891-b3ed03ff23b2) |
 |:------:|
 |Figure 2 - Functional diagram of PID controller|
 
@@ -295,7 +295,7 @@ Filters are available for both setpoint and actual value channels. The filters c
 
 #### 2.3.8 Rate limit
 
-The rate limit function limits the rate of change of the input value. It results in smoothing of input value jumps and a decrease in the rate of change of the signal. Rate limiters are available in the setpoint channel and controller output. Set the `settings.irSetpointRampRate` parameter to a non-zero value to activate the setpoint rate limiter and the `settings.irOutRampRate` parameter to activate the rate limiter for the controller output. The rate limiter in the controller output channel is active in all controller modes.
+The rate limit function limits the rate of change of the input value. It results in smoothing of input value jumps and a decrease in the rate of change of the signal. Rate limiters are available in the setpoint channel and controller output. Set the `settings.irSetpointRampRate` parameter to a non-zero value to activate the setpoint rate limiter and the `settings.irOutRampRate` parameter to activate the rate limiter for the controller output. The rate limiter in the controller output channel is active only in Auto mode.
 
 > [!TIP]
 > You can use a rate limiter for controller output to prevent the damage of controllable object due to a high rate of change of the control signal, for example, to prevent the water hammer effect. When the maximum rate of change of controller output is reached, block output `limitsActive` is set. The rate limiter is a nonlinear element and can lead to instability of the control loop and failure of the actual value to reach the setpoint. I recommend adjusting the PID tuning softer when block output `limitsActive` is blinking or constantly on.
@@ -356,7 +356,7 @@ settings.iwAntiWindupMethod := enumAntiWindupMethods.CLAMPING;
 If the actuator position is measured, it's possible to calculate the actual controller saturation value and subtract it from the integral term of the controller. Controller output will be recalculated and its value will not exceed the limits. The principle of back-calculation is shown in Figure 4.
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/bbd287cb-4583-4dc1-8490-5d2fd85cf010"  alt="Back calculation diagram"><br>
+    <img src="https://github.com/user-attachments/assets/68aad3c3-ffb4-4abf-844a-bd1c084fb9d9"  alt="Back calculation diagram"><br>
     Figure 4 - Functional scheme of back-calculation
 </p>
 
@@ -399,4 +399,4 @@ The limit function allows to constrain the range of the output value to a user-s
 | Version & Date | Change description |
 |-----|-----|
 | **01.00.00**<br/> 08.2024 | **controltheplant**<br/> First released version |
-| **01.01.00**<br/> 09.2024 | **controltheplant**<br/> - back calculation section changed <br/> - other minor fixes |
+| **01.01.00**<br/> 08.2024 | **controltheplant**<br/> - back calculation section changed <br/> - other minor fixes |
