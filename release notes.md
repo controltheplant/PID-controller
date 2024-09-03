@@ -7,6 +7,7 @@ v1.1.0, 08.2024\
 - further adaptation of various functions to incremental form
 - file extensions changed to *.st
 - functional diagram redrawn
+- readme updated
 
 v1.0.0, 08.2024
 - First released version
