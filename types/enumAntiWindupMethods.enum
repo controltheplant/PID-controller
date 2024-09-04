@@ -1,0 +1,30 @@
+{region BLOCK INFO HEADER}
+    //===============================================================================
+    // controltheplant / (c)Copyright (2024)
+    //-------------------------------------------------------------------------------
+    // Title:            enumAntiWindupMethods
+    // Comment/Function: enumeration of the methods to prevent the integrator wind-up 
+    //                   of `PID_Controller`
+    // Library/Family:   
+    // Author:           (controltheplant / https://github.com/controltheplant/PID-controller)
+    // Tested with:      CODESYS Control Win V3.5.20 
+    // Engineering:      CODESYS V3.5 SP20
+    // Restrictions:     
+    // Requirements:     `typePIDSettings` DUT
+    //-------------------------------------------------------------------------------
+    // Change log table:
+    // Version  | Date       | Expert in charge       | Changes applied
+    //----------|------------|------------------------|------------------------------
+    // 01.00.00 | 2024-08-20 | controltheplant        | First released version
+    //===============================================================================
+{endregion}
+
+{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE enumAntiWindupMethods :
+(
+	CLAMPING,        // integration stops when saturation is reched
+	BACK_CALC_MODEL, // backward calculation, ramp function used as actuator model
+	BACK_CALC_REAL   // backward calculation, measured actuator position used
+)UINT := CLAMPING;
+END_TYPE
