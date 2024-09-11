@@ -23,8 +23,8 @@
           2.3.11. [Offset](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2311-offset)\
           2.3.12. [Anti-windup](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2312-anti-windup)\
           2.3.13. [Limit](https://github.com/controltheplant/PID-controller/blob/main/readme.md#2313-limit)\
-	2.4. [Referenced objects](https://github.com/controltheplant/PID-controller/blob/main/readme.md#24-referenced-objects)\
-	2.5. [Change Log](https://github.com/controltheplant/PID-controller/blob/main/readme.md#25-change-log) 
+    2.4. [Referenced objects](https://github.com/controltheplant/PID-controller/blob/main/readme.md#24-referenced-objects)\
+    2.5. [Change Log](https://github.com/controltheplant/PID-controller/blob/main/readme.md#25-change-log) 
 ------
 ## 1  Preface
 
@@ -72,7 +72,7 @@ This block implements a proportional-integral-derivative controller for industri
 ### 2.2  Block interface
 
 #### Input parameter
-| Identifier | Data type | Default value | Description |
+| Identifier  | Data type | Default value | Description |
 |-----        |:----:|:-----:|-----|
 |setpoint     | REAL |       | Setpoint in auto mode, [eng. units]|
 |actualValue  | REAL |       | controllable (process) value used as feedback, [eng. units]|
@@ -88,31 +88,31 @@ This block implements a proportional-integral-derivative controller for industri
 
 #### Output parameter
 
-| Identifier | Data type | Default value | Description |
-|-----|:-----:|:-----:|-----|
-|out| REAL | |controller's output (CO), [0..100%]|
-|limitsActive | REAL | | 1=upper or lower limit of output reached or rate of change of controller's output exceeded (if specified) |
-|error| BOOL | FALSE | block issued an error |
-|errorID| DWORD | 0 | error code |
+| Identifier  | Data type | Default value | Description |
+|-----        |:-----:    |:-----:|-----|
+|out          | REAL      |       | controller's output (CO), [0..100%]|
+|limitsActive | REAL      |       | 1=upper or lower limit of output reached or rate of change of controller's output exceeded (if specified) |
+|error        | BOOL      | FALSE | block issued an error |
+|errorID      | DWORD     | 0     | error code |
 
 #### In/Out parameter
 
 | Identifier | Data type | Description |
-|-----|:-----:|-----|
-|manualValue| REAL | setpoint for manual mode; in auto mode it follows the controller's output |
+|-----       |:-----:|-----|
+|manualValue | REAL  | setpoint for manual mode; in auto mode it follows the controller's output |
 
 #### Static parameter
 | Identifier | Data type | Description |
-|-----|:-----:|-----|
-|settings| typePIDSettings | structure containing advanced PID settings |
+|-----       |:-----:|-----|
+|settings    | typePIDSettings | structure containing advanced PID settings |
 
 #### User-defined datatypes
 #### typePIDSettings
 
-| Identifier | Data type | Default value | Description |
-|-----|:-----:|:-----:|-----|
-|iwAntiWindupMethod      | enumAntiWindupMethods       | | method selected to prevent integrator saturation|
-|iwBumplessTransferMethod| enumBumplessTransferMethods | | method selected for transfer from Manual to Auto|
+| Identifier             | Data type                   | Default value | Description |
+|-----                   |:-----:                      |:-----:|-----|
+|iwAntiWindupMethod      | enumAntiWindupMethods       |       | method selected to prevent integrator saturation|
+|iwBumplessTransferMethod| enumBumplessTransferMethods |       | method selected for transfer from Manual to Auto|
 |irKP                 | REAL | 1.0   | proportional term. Value must be positive |
 |irTI                 | REAL | 0.0   | integral term. Negative value is forbidden|
 |irTD                 | REAL | 0.0   | derivative term. Negative value is forbidden|
@@ -133,7 +133,7 @@ This block implements a proportional-integral-derivative controller for industri
 #### enumAntiWindupMethods
 
 | Identifier | Default value| Description |
-|-------|:------------:|------------|
+|-------     |:------------:|------------|
 |CLAMPING        |  X  | integration stops when saturation is reached |
 |BACK_CALC_MODEL |     | backward calculation, ramp function used as actuator model |
 |BACK_CALC_REAL  |     | backward calculation, measured actuator position used |
@@ -154,7 +154,7 @@ This block implements a proportional-integral-derivative controller for industri
 #### Status & Error codes
 
 |Code / Value | Identifier / Description |
-|-----|-----|
+|-----        |-----|
 |  0     | STATUS_NO_ERRORS <br/> no errors                                                      |
 |16#8201 | ERR_BAD_LIMITS <br/> bad low or/and high limits                                       |
 |16#8202 | ERR_CANT_TRACK_SETP <br/> 'TRACK_SETPOINT' method selected, but setpoint ramp is zero |
@@ -185,7 +185,7 @@ The `PIC_Controller` block implements **velocity-based** algorithm,  also known 
 - ease of implementation of such functions as bumpless transfer, anti-windup protection, rate limit;
 - ease of upgrading to a 3-step PID controller to drive integral-type actuators, like motor-driven valves.
 
-The internal structure of the PID Controller is given in the form of a block diagram of discrete z-transfer functions, which is shown in Figure 1:
+The internal algorithm of the PID Controller is given in the form of a block diagram of discrete z-transfer functions, which is shown in Figure 1:
 
 |![figure1](https://github.com/user-attachments/assets/73fbbf0f-c6ae-4083-bba0-54fce8ff29fb "Block diagram of PID Controller")|
 |:-----:|
